@@ -1,4 +1,4 @@
-package cmd
+package downloader
 
 import (
 	"fmt"
@@ -6,39 +6,7 @@ import (
 	"net/http"
 	"os"
 	"sync"
-
-	"github.com/spf13/cobra"
-	//import downloader package
 )
-
-const chunkSize = 1024 * 1024 // 1 MB chunks
-
-var downloaderCmd = &cobra.Command{
-	Use:   "download",
-	Short: "Download a file from the internet",
-	Long:  `Download a file from the internet asyncronously.`,
-	Run:   asyncDownload,
-}
-
-// func init() {
-// 	// rootCmd.AddCommand(downloaderCmd)
-// 	// downloaderCmd.Flags().StringP("url", "u", "", "URL to download file from")
-// 	// downloaderCmd.Flags().IntP("worker_count", "w", 2, "Number of workers to use")
-// 	// downloaderCmd.Flags().StringP("output_path", "o", "output", "Path to output file")
-// }
-
-func asyncDownload(cmd *cobra.Command, args []string) {
-	fmt.Println("Downloading file...")
-	url, _ := cmd.Flags().GetString("url")
-	workerCount, _ := cmd.Flags().GetInt("worker_count")
-	outputPath, _ := cmd.Flags().GetString("output_path")
-	err := DownloadFileConcurrently(url, outputPath, workerCount)
-	if err != nil {
-		fmt.Println("Error:", err)
-	}
-	// go downloadFile(url, filepath)
-	// fmt.Println("Download started...")
-}
 
 func DownloadFileConcurrently(url, outputPath string, numWorkers int) error {
 	resp, err := http.Head(url)
