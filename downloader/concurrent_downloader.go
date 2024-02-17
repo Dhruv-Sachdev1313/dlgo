@@ -2,8 +2,10 @@ package downloader
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"os"
+	"sync"
 )
 
 func DownloadFileConcurrently(url, outputPath string, numWorkers int) error {
@@ -27,6 +29,8 @@ func DownloadFileConcurrently(url, outputPath string, numWorkers int) error {
 
 	fetchContentSize := fileSize / int64(numWorkers)
 
+	var mutex sync.Mutex
+
 	var start, end int64
 
 	for i := 0; i < numWorkers; i++ {
@@ -40,7 +44,7 @@ func DownloadFileConcurrently(url, outputPath string, numWorkers int) error {
 			end = fileSize
 		}
 		go func(start, end int64) {
-			err := downloadChunk(url, file, start, end)
+			err := downloadChunk(url, file, start, end, &mutex)
 			if err != nil {
 				fmt.Println("Error:", err)
 			}
@@ -49,7 +53,7 @@ func DownloadFileConcurrently(url, outputPath string, numWorkers int) error {
 	return nil
 }
 
-func downloadChunk(url string, file *os.File, start int64, end int64) error {
+func downloadChunk(url string, file *os.File, start int64, end int64, mutex *sync.Mutex) error {
 	client := http.Client{}
 	req, _ := http.NewRequest("GET", url, nil)
 	rangeHeader := fmt.Sprintf("bytes=%d-%d", start, end)
@@ -59,9 +63,22 @@ func downloadChunk(url string, file *os.File, start int64, end int64) error {
 		return err
 	}
 	if resp.StatusCode != http.StatusPartialContent {
-
+		return fmt.Errorf("server does not support partial content")
 	}
 	defer resp.Body.Close()
+
+	mutex.Lock()
+
+	_, err = file.Seek(start, io.SeekStart)
+	if err != nil {
+		return err
+	}
+
+	_, err = io.Copy(file, resp.Body)
+	if err != nil {
+		return err
+	}
+	mutex.Unlock()
 
 	return nil
 
