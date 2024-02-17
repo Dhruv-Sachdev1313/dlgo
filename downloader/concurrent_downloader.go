@@ -30,6 +30,7 @@ func DownloadFileConcurrently(url, outputPath string, numWorkers int) error {
 	fetchContentSize := fileSize / int64(numWorkers)
 
 	var mutex sync.Mutex
+	var wg sync.WaitGroup
 
 	var start, end int64
 
@@ -43,13 +44,16 @@ func DownloadFileConcurrently(url, outputPath string, numWorkers int) error {
 		if i == numWorkers-1 {
 			end = fileSize
 		}
+		wg.Add(1)
 		go func(start, end int64) {
+			defer wg.Done()
 			err := downloadChunk(url, file, start, end, &mutex)
 			if err != nil {
 				fmt.Println("Error:", err)
 			}
 		}(start, end)
 	}
+	wg.Wait()
 	return nil
 }
 
