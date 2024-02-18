@@ -22,7 +22,7 @@ func DownloadFileConcurrently(url, outputPath string, numWorkers int) error {
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("HTTP response code error: %s", resp.StatusCode)
+		return fmt.Errorf("HTTP response code error: %d", resp.StatusCode)
 	}
 
 	fileSize := resp.ContentLength
