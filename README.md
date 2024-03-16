@@ -22,7 +22,7 @@ If you are on zsh shell like me then you can add the following line to your .zsh
 example run command:
 ```dlgo download -u https://research.nhm.org/pdfs/10592/10592-001.pdf -w 2 -o out.pdf```
 
-![dlgo demo](./assets/run-fast.gif)
+![dlgo demo](./assets/run.gif)
 
 ## Contribution
 Feel free to open an issue or a PR. As I mentioned earlier, this is a very simple implementation, so there is a lot of room for improvement. We can define types, add support for new protocols(FTP etc), imporve the CLI, impove progress indicator, refactor my scrappy code, add tests and so on.
