@@ -15,4 +15,4 @@ If you are on zsh shell like me then you can add the following line to your .zsh
 run command:
 ```dlgo download -u https://research.nhm.org/pdfs/10592/10592-001.pdf -w 2 -o out.pdf```
 
-![dlgo demo](./assets/run.gif)
+![dlgo demo](./assets/run-fast.gif)
