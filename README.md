@@ -1,7 +1,7 @@
 # dlgo
 Downloader accelerator in Go.
 
-It splits your file and downlods it in parallel using go routines.
+It splits your file and downlods it in parallel using go routines. This is a very simple implementation of [dlrs](https://github.com/ditsuke/dlrs)
 
 ## When does it actually help?
 - When you really want to download a large file
@@ -23,3 +23,6 @@ example run command:
 ```dlgo download -u https://research.nhm.org/pdfs/10592/10592-001.pdf -w 2 -o out.pdf```
 
 ![dlgo demo](./assets/run-fast.gif)
+
+## Contribution
+Feel free to open an issue or a PR. As I mentioned earlier, this is a very simple implementation, so there is a lot of room for improvement. We can define types, add support for new protocols(FTP etc), imporve the CLI, refactor my scrappy code, add tests and so on.
